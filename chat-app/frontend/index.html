@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+</head>
+
+<body>
+    <div id="chat-container">
+        <div id="chat-box"></div>
+        <input id="chat-input" type="text" placeholder="Type a message...">
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+</body>
+<style>
+    body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+  margin: 0;
+}
+
+#chat-container {
+  width: 500px;
+  max-width: 100%;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+#chat-box {
+  height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background: #fafafa;
+}
+
+#chat-input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+</style>
+<script>
+    const socket = io.connect();
+
+        const chatBox = document.getElementById('chat-box');
+        const chatInput = document.getElementById('chat-input');
+
+        chatInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                const message = chatInput.value;
+                socket.send(message);
+                chatInput.value = '';
+            }
+        });
+
+        socket.on('message', function (msg) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = msg;
+            chatBox.appendChild(messageElement);
+        });
+
+
+</script>
+</html>

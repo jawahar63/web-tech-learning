@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAV Bank - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            margin: 0;
+            color: #333;
+        }
+
+        .dashboard-container {
+            text-align: center;
+        }
+
+        .dashboard-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .dashboard-container p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .dashboard-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .dashboard-container button:hover {
+            background-color: #228d3b;
+        }
+
+        .dashboard-container a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #28a745;
+            text-decoration: none;
+        }
+
+        .dashboard-container a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #f4f4f4;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">AXIS Bank</h1>
+        </header>
+        <main>
+            <div class="dashboard-container">
+                <h2>Welcome, Jawahar</h2>
+                <p>Balance: Rs 30000</p>
+                <form action="{{ url_for('withdraw') }}" method="POST">
+                    <div class="form-group">
+                        <input type="number" name="amount" placeholder="Enter amount to withdraw" required>
+                    </div>
+                    <button type="submit">Withdraw</button>
+                </form>
+                <br>
+                <form action="{{ url_for('deposit') }}" method="POST">
+                    <div class="form-group">
+                        <input type="number" name="amount" placeholder="Enter amount to deposit" required>
+                    </div>
+                    <button type="submit">Deposit</button>
+                </form>
+                <a href="{{ url_for('logout') }}">Logout</a>
+                <h3>Transaction History</h3>
+                <!-- <ul>
+                    {% for transaction in transactions[username] %}
+                    <li>{{ transaction }}</li>
+                    {% endfor %}
+                </ul> -->
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shopping</title>
+    <style>
+        /* styles.css */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+    
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+    
+        #add-product-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+        #product-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    
+        .product {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+    
+        .product:hover {
+            transform: translateY(-5px);
+        }
+    
+        .product-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2em;
+        }
+    
+        .product-price {
+            color: #4CAF50;
+            font-size: 1.2em;
+        }
+    
+        .buy-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        .buy-button:hover {
+            background-color: #45a049;
+        }
+    
+        #add-product-form input[type="text"],
+        #add-product-form input[type="number"],
+        #add-product-form button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+    
+        #add-product-form input[type="text"],
+        #add-product-form input[type="number"] {
+            width: calc(50% - 25px);
+        }
+    
+        #add-product-form button {
+            background-color: #008CBA;
+            color: white;
+            cursor: pointer;
+            width: 100px;
+            transition: background-color 0.3s ease;
+        }
+    
+        #add-product-form button:hover {
+            background-color: #005A8D;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Online Shopping</h1>
+    <div id="product-list"></div>
+    <form id="add-product-form">
+        <input type="text" id="name" placeholder="Product Name">
+        <input type="number" id="price" placeholder="Price">
+        <button type="submit">Add Product</button>
+    </form>
+    <script>
+            const productList = document.getElementById('product-list');
+            const addProductForm = document.getElementById('add-product-form');
+
+            // Fetch products
+            async function fetchProducts() {
+                try {
+                    const response = await fetch('/products');
+                    const products = await response.json();
+                    productList.innerHTML = products.map(product => <div>${product.name}: $${product.price}</div>).join('');
+                } catch (error) {
+                    console.error('Error fetching products:', error);
+                }
+            }
+
+            // Add product
+            addProductForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const price = document.getElementById('price').value;
+                try {
+                    const response = await fetch('/products', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ name, price }),
+                    });
+                    if (response.ok) {
+                        fetchProducts();
+                        addProductForm.reset();
+                    } else {
+                        const errorMessage = await response.text();
+                        console.error('Error adding product:', errorMessage);
+                    }
+                } catch (error) {
+                    console.error('Error adding product:', error);
+                }
+            });
+
+            // Initial fetch
+            fetchProducts(); const productList = document.getElementById('product-list');
+        const addProductForm = document.getElementById('add-product-form');
+
+        // Function to create a new product div
+        function createProductDiv(name, price) {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.innerHTML = `
+                <div class="product-name">${name}</div>
+                <div class="product-price">$${price}</div>
+                <button class="buy-button">Buy</button>
+            `;
+            return productDiv;
+        }
+
+        // Add product
+        addProductForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+
+            // Create and append the new product div
+            const newProductDiv = createProductDiv(name, price);
+            productList.appendChild(newProductDiv);
+
+            // Reset form
+            addProductForm.reset();
+        });
+    </script>
+</body>
+
+</html>

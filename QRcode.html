@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .main {
+            background: #fff;
+            padding: 20px;
+            display: flex;
+            width: 40%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Inventory Management QR Code</h3>
+    <div class="main">
+        <input type="text" name="productName" class="input" placeholder="Enter product name...">
+        <input type="text" name="productId" class="input" placeholder="Enter product ID...">
+        <input type="text" name="productData" class="input" placeholder="Enter additional product data...">
+        <button class="btn">Generate</button>
+        <div id="qrcode"></div>
+    </div>
+    <div id="toast">Wow! You Generated a QR Code</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        const btn = document.querySelector('.btn');
+        const qrcodeDiv = document.querySelector('#qrcode');
+        const inputProductName = document.querySelector('input[name="productName"]');
+        const inputProductId = document.querySelector('input[name="productId"]');
+        const inputProductData = document.querySelector('input[name="productData"]');
+        const toast = document.querySelector('#toast');
+
+        btn.addEventListener('click', generate);
+
+        function generate() {
+            const productName = inputProductName.value;
+            const productId = inputProductId.value;
+            const additionalData = inputProductData.value;
+            const data = `Product Name: ${productName}\nProduct ID: ${productId}\nAdditional Data: ${additionalData}`;
+            qrcodeDiv.innerHTML = '';
+            new QRCode(qrcodeDiv, data);
+            toastDiv();
+        }
+
+        function toastDiv() {
+            toast.className = "show";
+            setTimeout(function () {
+                toast.className = toast.className.replace("show", "");
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>

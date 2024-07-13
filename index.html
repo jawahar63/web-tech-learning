@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+</head>
+<style>
+body {
+  font-family: Arial, sans-serif;
+}
+
+#task-form {
+  margin-bottom: 20px;
+}
+
+input[type="text"], textarea, input[type="date"], select {
+  margin-bottom: 10px;
+  width: 70%;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+</style>
+<body>
+    <h1>Task Manager</h1>
+    <div id="task-form">
+        <input type="text" id="title" placeholder="Title">
+        <textarea id="description" placeholder="Description"></textarea>
+        <input type="date" id="dueDate">
+        <select id="priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select><br>
+        <button onclick="addTask()">Add Task</button>
+    </div>
+    <div id="task-list">
+
+    </div>
+    <script>
+        // script.js
+            document.addEventListener('DOMContentLoaded', () => {
+                getTasks();
+            });
+
+            async function getTasks() {
+                const response = await fetch('/api/tasks');
+                const tasks = await response.json();
+
+                const taskList = document.getElementById('task-list');
+                taskList.innerHTML = '';
+
+                tasks.forEach(task => {
+                    const taskItem = document.createElement('div');
+                    taskItem.innerHTML = `
+      <h3>${task.title}</h3>
+      <p>${task.description}</p>
+      <p>Due Date: ${task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'N/A'}</p>
+      <p>Priority: ${task.priority}</p>
+      <button onclick="deleteTask('${task._id}')">Delete</button>
+    `;
+                    taskList.appendChild(taskItem);
+                });
+            }
+
+            async function addTask() {
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                const dueDate = document.getElementById('dueDate').value;
+                const priority = document.getElementById('priority').value;
+
+                const response = await fetch('/api/tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, description, dueDate, priority })
+                });
+
+                if (response.ok) {
+                    getTasks();
+                } else {
+                    alert('Failed to add task');
+                }
+            }
+
+            async function deleteTask(id) {
+                const response = await fetch(`/api/tasks/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    getTasks();
+                } else {
+                    alert('Failed to delete task');
+                }
+            }
+
+    </script>
+</body>
+
+</html>
